@@ -14,7 +14,9 @@ public interface RolePrivilageService {
 	
 	public List<String> getPrivilegeByRole(String roleNames);
 	
+	public String getUserRole(String username);
 	
+	public boolean isRoleContainPrivilege(String role,String privilege);
 	
 
 }

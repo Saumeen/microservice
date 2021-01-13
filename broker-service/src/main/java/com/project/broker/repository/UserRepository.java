@@ -8,7 +8,8 @@ import com.project.broker.model.UserModel;
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {
 
-	public UserModel findByUsername(String username);
+	public UserModel findByUsernameAndEmail(String username,String email);
 	
+	public UserModel findByUsername(String username);
 	
 }

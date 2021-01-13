@@ -21,6 +21,6 @@ public interface UserService {
 	 */
 	public UserAuth isValid(String username,String password);
 	
-	
+
 
 }

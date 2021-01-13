@@ -11,5 +11,11 @@ public class Constant {
 	
 	
 	public static final String RESPONSE = "response";
+	
+	public static final String SUCCESSFULLY_COMPLETED= "Successfully completed!!!";
+	
+	public static final String ADD= "ADD";
+	public static final String UPDATE= "UPDATE";
+	public static final String DELETE= "DELETE";
 
 }

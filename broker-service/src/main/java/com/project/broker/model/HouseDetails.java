@@ -22,7 +22,7 @@ public class HouseDetails {
 	private String state;
 	private String country;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private UserModel userModel;
 
 	/**

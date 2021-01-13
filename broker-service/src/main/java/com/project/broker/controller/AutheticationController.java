@@ -3,16 +3,10 @@
  */
 package com.project.broker.controller;
 
-import java.util.List;
-
-import javax.websocket.server.PathParam;
-
-import org.apache.http.client.methods.HttpPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.broker.dto.ResponseDTO;
 import com.project.broker.dto.RoleDto;
 import com.project.broker.dto.UserAuth;
+import com.project.broker.exception.CustomRuntimeException;
 import com.project.broker.service.RolePrivilageService;
 import com.project.broker.service.UserService;
 
@@ -32,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/admin")
 @Slf4j
 public class AutheticationController {
 
@@ -41,6 +36,10 @@ public class AutheticationController {
 
 	@Autowired
 	private Environment environment;
+	
+	@Autowired
+	RolePrivilageService rolePrivilageService;
+
 
 	@GetMapping("/check")
 	public String check() {
@@ -54,24 +53,30 @@ public class AutheticationController {
 
 		try {
 			userService.addUser(userAuth);
-		} catch (Exception e) {
+		} catch (CustomRuntimeException e) {
 			log.error("Error -> {}", e.getMessage());
-			return new ResponseDTO(HttpStatus.OK.value(), false, "User not added!!", null);
+			return new ResponseDTO(HttpStatus.OK.value(), false,e.getMessage(), null);
 		}
 
 		return new ResponseDTO(HttpStatus.OK.value(), true, "User Added", null);
 
 	}
 
-	@PostMapping("/loginUser")
-	public ResponseDTO loginUserValidation(@RequestBody UserAuth userAuth) {
+	@PostMapping("/addRole")
+	public ResponseDTO addrole(@RequestBody RoleDto roleDto) {
 
-		UserAuth user = userService.isValid(userAuth.getUsername(), userAuth.getPassword());
+		try {
+			log.info("Role Dto started {}", roleDto.toString());
+			rolePrivilageService.addRole(roleDto);
+			return new ResponseDTO(HttpStatus.OK.value(), true, "Role added!!", null);
+		} catch (CustomRuntimeException e) {
+			log.error("{}", e.getMessage());
+			return new ResponseDTO(HttpStatus.OK.value(), false, e.getMessage(), null);
 
-		if (user == null) {
-			return new ResponseDTO(HttpStatus.OK.value(), false, "Not Found User!!", "");
 		}
-		return new ResponseDTO(HttpStatus.OK.value(), true, "User found!!", user);
 	}
+	
+
+	
 
 }
